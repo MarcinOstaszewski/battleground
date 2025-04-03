@@ -1,7 +1,7 @@
 import pygame
-import math
 from helpers.scan_for_other_robots import scan_for_other_robots
 from helpers.draw_robot_on_screen import draw_robot_on_screen
+from helpers.calculate_new_position import calculate_new_position
 
 class Robot:
     def __init__(self, robot, screen):
@@ -19,23 +19,17 @@ class Robot:
         # self.equipped_with = robot["equipped_with"]
 
     def move(self, direction, speed):
-        """Move the robot in a given direction (degrees) and speed."""
-        radians = math.radians(direction)
-        # Calculate change in x and y using trigonometry
-        x = self.position[0] + speed * math.cos(radians)
-        y = self.position[1] + speed * math.sin(radians)
-        # Ensure the robot stays within the screen bounds
-        x = max(0, min(x, self.screen.get_width()))
-        y = max(0, min(y, self.screen.get_height()))
-        self.position = (x, y)
-    
-    def scan(self, angle, scan_width=5):
-        """Scan specific angle and given width for other robots, displays scan triangle on the screen."""
-        scan_result, scan_triangle = scan_for_other_robots(self, angle, scan_width)
-        # Draw the scan triangle for visualization
-        pygame.draw.polygon(self.screen,  (60, 60, 60, 10), scan_triangle)
-        return scan_result
+        """Move the robot in a given direction (0-360 degrees) with 0-100 speed."""
+        self.position = calculate_new_position(self, direction, speed)
 
-    def render(self, screen):
+    def stop(self):
+        """Stop the robot."""
+        self.speed = 0
+    
+    def scan_rich(self, angle, scan_width=5):
+        """Scan specific angle and given width for other robots, displays scan triangle on the screen."""
+        return scan_for_other_robots(self, angle, scan_width, pygame)
+
+    def render(self):
         """Render the robot on the screen."""
-        draw_robot_on_screen(self, pygame, screen)
+        draw_robot_on_screen(self, pygame)

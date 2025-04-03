@@ -27,7 +27,7 @@ def main():
 
         state.robots = updated_robots        
         for robot in state.robots: # render robots
-            robot.render(screen)
+            robot.render()
 
         pygame.display.flip() # Update display
         clock.tick(60)

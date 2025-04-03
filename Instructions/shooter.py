@@ -10,7 +10,7 @@ def set_vars():
 
 def update(r):
   r.direction += random.uniform(0.1, 0.3)
-  r.speed += random.uniform(-0.3, 0.3)
+  r.speed += random.uniform(-30, 30)
   r.move(r.direction, r.speed)
   
   return r
