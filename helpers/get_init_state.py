@@ -6,18 +6,25 @@ from Robot import Robot
 INSTRUCTIONS_FOLDER = "Instructions"
 
 class GameState:
-  """Class to represent the initial state of the game."""
-  def __init__(self):
-    self.robots = []
-    self.get_all_robots_from_state = self.get_all_robots_from_state
-    self.resources = {
-        "iron": [],
-    }
-    # self.bullets = []
-    # self.score = []
+    """Class to represent the initial state of the game."""
+    def __init__(self):
+        self.robots = []
+        self.get_all_robots_from_state = self.get_all_robots_from_state
+        self.resources = {
+            "iron": [],
+        }
+        self.bullets = []
+        # self.score = []
 
-  def get_all_robots_from_state(self):
-    return self.robots
+    def get_all_robots_from_state(self):
+        return self.robots
+    
+    def append_bullet(self, bullet):
+        """Append a bullet to the state."""
+        self.bullets.append(bullet)
+    
+    def get_all_bullets_from_state(self):
+        return self.bullets
 
 def load_robot_instructions():
     robot_files = [os.path.splitext(f)[0] for f in os.listdir(INSTRUCTIONS_FOLDER) if f.endswith(".py")]
@@ -45,12 +52,14 @@ def get_init_state(SCREEN_WIDTH, SCREEN_HEIGHT, screen):
             "id": i,
             "update": update_function,
             "get_all_robots_from_state": state.get_all_robots_from_state,
+            "append_bullet": state.append_bullet,
             "position": position,
             "direction": direction,
             "aim_angle": random.uniform(0, 360),
             "vars": robot_vars,
             "color": robot_vars.get("color", (0, 0, 0)),
             # "equipped_with": [],
+            # "get_all_bullets_from_state": state.get_all_bullets_from_state,
         }
         state.robots.append(Robot(robot_init_data, screen))
     return state

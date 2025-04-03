@@ -1,5 +1,5 @@
 import math
-# Import moved inside the function to avoid circular import issues
+from box import Box
 
 def scan_for_other_robots(myself, angle, angle_range, pygame):
   angle_range = min(30, angle_range)  # Ensure a maximum angle range of 30 degrees
@@ -33,7 +33,7 @@ def scan_for_other_robots(myself, angle, angle_range, pygame):
 
       if 0 <= a <= 1 and 0 <= b <= 1 and 0 <= c <= 1:
         distance = math.sqrt((px - tip[0]) ** 2 + (py - tip[1]) ** 2)
-        detected_robots.append({"id": other_robot.id, "distance": distance, "health": other_robot.health})
+        detected_robots.append(Box({"id": other_robot.id, "distance": distance, "health": other_robot.health}))
   
   # Create a transparent surface, draw a scan triangle and blit it on the screen
   transparent_surface = pygame.Surface(myself.screen.get_size(), pygame.SRCALPHA)
@@ -41,4 +41,4 @@ def scan_for_other_robots(myself, angle, angle_range, pygame):
   pygame.draw.polygon(transparent_surface, (250, 250, 250, 10), scan_triangle)
   myself.screen.blit(transparent_surface, (0, 0))
 
-  return detected_robots
+  return detected_robots if detected_robots else None

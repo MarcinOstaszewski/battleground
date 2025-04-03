@@ -1,14 +1,13 @@
 import pygame
-from helpers.scan_for_other_robots import scan_for_other_robots
-from helpers.draw_robot_on_screen import draw_robot_on_screen
-from helpers.calculate_new_position import calculate_new_position
-
+from helpers import scan_for_other_robots, draw_robot_on_screen, calculate_new_position
+from constants.settings_constants import MAX_SHOT_RANGE
 class Robot:
     def __init__(self, robot, screen):
         self.screen = screen
         self.id = robot["id"]
         self.update = robot["update"]
         self.get_all_robots_from_state = robot["get_all_robots_from_state"]
+        self.append_bullet = robot["append_bullet"]
         self.position = robot["position"]
         self.speed = 0
         self.max_speed = 5 # Default max speed if not specified
@@ -16,7 +15,9 @@ class Robot:
         self.direction = robot["direction"]
         self.aim_angle = robot["aim_angle"]
         self.vars = robot["vars"]
+        self.bullet_shot_counter = 0
         # self.equipped_with = robot["equipped_with"]
+        # self.get_all_bullets_from_state = robot["get_all_bullets_from_state"]
 
     def move(self, direction, speed):
         """Move the robot in a given direction (0-360 degrees) with 0-100 speed."""
@@ -27,9 +28,23 @@ class Robot:
         self.speed = 0
     
     def scan_rich(self, angle, scan_width=5):
-        """Scan specific angle and given width for other robots, displays scan triangle on the screen."""
+        """Scan specific angle in given width for other robots and displays scan triangle on the screen."""
         return scan_for_other_robots(self, angle, scan_width, pygame)
+    
+    def shoot(self, shoot_angle, range):
+        """Shoot a bullet in a given direction for a given range."""
+        if self.bullet_shot_counter == 0:
+            self.bullet_shot_counter = 100
+            self.append_bullet({
+                "position": self.position,
+                "direction": shoot_angle,
+                "x_shift": 0,
+                "y_shift": 0,
+                "range_covered": 0,
+                "range": int(min(MAX_SHOT_RANGE, range))
+            })
 
     def render(self):
         """Render the robot on the screen."""
+        self.bullet_shot_counter -= 1 if self.bullet_shot_counter > 0 else 0
         draw_robot_on_screen(self, pygame)
