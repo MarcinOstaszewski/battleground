@@ -31,6 +31,12 @@ class Robot:
         """Scan specific angle in given width for other robots and displays scan triangle on the screen."""
         return scan_for_other_robots(self, angle, scan_width, pygame)
     
+    def getX(self):
+        return self.position[0]
+
+    def getY(self):
+        return self.position[1]
+    
     def shoot(self, shoot_angle, range):
         """Shoot a bullet in a given direction for a given range."""
         if self.bullet_shot_counter == 0:
