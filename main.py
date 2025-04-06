@@ -1,20 +1,14 @@
 import pygame
-import math
-from helpers.get_init_state import get_init_state
-from constants.screen_constants import BACKGROUND_COLOR
-from constants.settings_constants import BULLET_SPEED
-from helpers.check_for_quit_events import check_for_quit_events
+from helpers import update_bullets, get_init_state, update_robots, check_for_quit_events
+from constants.settings_constants import BACKGROUND_COLOR, SCREEN_WIDTH, SCREEN_HEIGHT
 
 pygame.init()
-SCREEN_WIDTH, SCREEN_HEIGHT = pygame.display.Info().current_w, pygame.display.Info().current_h
-print(f"Screen size: {SCREEN_WIDTH}x{SCREEN_HEIGHT}")
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN)
-pygame.display.set_caption("Battleground")
+# SCREEN_WIDTH, SCREEN_HEIGHT = pygame.display.Info().current_w, pygame.display.Info().current_h
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-# Main loop
 def main():
     clock = pygame.time.Clock()
-    state = get_init_state(SCREEN_WIDTH, SCREEN_HEIGHT, screen)
+    state = get_init_state(screen)
 
     running = True
     while running:
@@ -22,28 +16,9 @@ def main():
 
         screen.fill(BACKGROUND_COLOR) # Draw battleground
 
-        updated_robots = [] # Create new state for the next frame
+        update_bullets(state, screen, pygame)
 
-        for bullet in state.bullets: # Update bullets
-            if bullet["x_shift"] == 0 and bullet["y_shift"] == 0:
-                bullet["x_shift"] = BULLET_SPEED * math.cos(math.radians(bullet["direction"]))
-                bullet["y_shift"] = BULLET_SPEED * math.sin(math.radians(bullet["direction"]))
-            bullet["range_covered"] += BULLET_SPEED
-            bullet["position"] = (bullet["position"][0] + bullet["x_shift"], bullet["position"][1] + bullet["y_shift"])
-            pygame.draw.circle(screen, (20, 20, 20), bullet["position"], 5)
-            if bullet["range_covered"] >= bullet["range"]:
-                state.bullets.remove(bullet)
-
-        for robot in state.robots: # Update robots
-            if robot.health <= 0:
-                robot.speed = 0
-                updated_robots.append(robot)
-            else:
-                updated_robots.append(robot.update(robot))
-
-        state.robots = updated_robots        
-        for robot in state.robots: # render robots
-            robot.render()
+        update_robots(state)
 
         pygame.display.flip() # Update display
         clock.tick(60)
@@ -52,6 +27,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
- 

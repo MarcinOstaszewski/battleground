@@ -1,3 +1,7 @@
 from .scan_for_other_robots import scan_for_other_robots
 from .draw_robot_on_screen import draw_robot_on_screen
 from .calculate_new_position import calculate_new_position
+from .update_robots import update_robots
+from .update_bullets import update_bullets
+from .get_init_state import get_init_state
+from .check_for_quit_events import check_for_quit_events

@@ -1,6 +1,4 @@
-import os
-import math
-import random
+import os, math, random
 from Robot import Robot
 
 INSTRUCTIONS_FOLDER = "Instructions"
@@ -14,10 +12,13 @@ class GameState:
             "iron": [],
         }
         self.bullets = []
-        # self.score = []
+        self.updated_robots = []
 
     def get_all_robots_from_state(self):
         return self.robots
+    
+    def reset_updated_bullets(self):
+        self.updated_robots = []
     
     def append_bullet(self, bullet):
         """Append a bullet to the state."""
@@ -37,8 +38,9 @@ def get_init_robot_pos_and_direction(robot_index, number_of_all_robots, SCREEN_W
     y = int(SCREEN_HEIGHT / 2 + SCREEN_HEIGHT / 3 * math.sin(math.radians(angle * robot_index)))
     return (x, y), angle * robot_index - 180
 
-def get_init_state(SCREEN_WIDTH, SCREEN_HEIGHT, screen):
+def get_init_state(screen):
     """Create the initial state of the game."""
+    SCREEN_WIDTH, SCREEN_HEIGHT = screen.get_size()
     state = GameState()
     robot_instructions = load_robot_instructions()
     for i, instruction in enumerate(robot_instructions):

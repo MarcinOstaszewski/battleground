@@ -1,5 +1,5 @@
 import math
-from constants.screen_constants import ROBOT_RADIUS
+from constants.settings_constants import ROBOT_RADIUS
 
 def draw_robot_on_screen(self, pygame):
   """Draw the robot on the screen."""
